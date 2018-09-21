@@ -1,14 +1,139 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Auto Refresh & Switch Tabs By Mazel</title>
-	</head>
-	<body style="width: 400px;">
-		<h3>Auto Switch To Next Tab & Refesh Tab</h3>
-		<p>Every 20 seconds</p>
-		<ul>
-			<li>The next tab will be activated</li>
-			<li>The next (+1) tab will be resfreshed</li>
-		</ul>
-	</body>
+<head>
+    <script src='js/popup.js'></script>
+    <title>Auto buy&sell Remitano</title>
+</head>
+<body style="width: 500px;">
+<h2 style="text-align: center;color: #5bc0de">   Auto buy&sell Remitano</h2>
+<h5 style="text-align: center;color: gray;    margin-top: -10px;">@Author:PhuongCong - v1.01</h5>
+<hr>
+<h2 style="color: gray;font-weight: normal">   1, Login acc in https://remitano.com</h2>
+<h2 style="color: gray;font-weight: normal">   2, Buy: Creat a ads buy</h2>
+<h2 style="color: gray;font-weight: normal">   3, Sell: Creat a ads sell</h2>
+<h2 style="color: gray;font-weight: normal">   4, Choose action, then click into 'SAVE' button</h2>
+<table style="width: 500px">
+    <thead>
+    <tr id="radio-group">
+        <th><label class="container" style="color: #d9534f!important;">Buy
+
+            <input id="radio1" type="radio" name="theRadioGroupName" value="1">
+            <span class="checkmark"></span>
+        </label></th>
+        <th><label class="container" style="color: #5cb85c!important;">Sell
+            <input  id="radio2" type="radio" name="theRadioGroupName" value="2">
+            <span class="checkmark"></span>
+        </label></th>
+        <th><label class="container">Off
+            <input  id="radio3" type="radio" name="theRadioGroupName" value="3" >
+            <span class="checkmark"></span>
+        </label></th>
+    </tr>
+    </thead>
+
+</table>
+<br>
+<div style="    text-align: center;">
+    <button id="btn-save" class="button button1" >SAVE</button>
+
+</div>
+
+
+
+
+</body>
+
+<style>
+    /* The container */
+    .container {
+        width: 33%;
+        display: block;
+        font-weight: normal;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Hide the browser's default radio button */
+    .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* Create a custom radio button */
+    .checkmark {
+        margin-top: 3px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 50%;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the radio button is checked, add a blue background */
+    .container input:checked ~ .checkmark {
+        background-color: #f3910e;
+    }
+
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the indicator (dot/circle) when checked */
+    .container input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Style the indicator (dot/circle) */
+    .container .checkmark:after {
+        top: 9px;
+        left: 9px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: white;
+    }
+    .button {
+        background-color: white; /* Green */
+        border: none;
+        color: white;
+        padding: 8px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        -webkit-transition-duration: 0.4s; /* Safari */
+        transition-duration: 0.4s;
+        cursor: pointer;
+    }
+    .button1 {
+        background-color:  #5bc0de;
+        color: white;
+        border-radius: 10px;
+        border: 0.6px solid #5bc0de;
+
+    }
+    .button1:hover {
+        background-color: white;
+        color: gray;
+    }
+</style>
 </html>
