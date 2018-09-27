@@ -414,7 +414,10 @@ function getValue(offersPrice) {
                 }
             }else if (ACTION === isAutoBuy) {
                 if (item <= MAX) {
-                    value = item - 1;
+					value = item + 5;
+						if(value>MAX){
+							value=MAX;
+						}
                     flag = false;
                 }
             }else {
@@ -463,6 +466,9 @@ function getNumberInput(offersPrice) {
                 if (ACTION === isAutoSell) {
                     if (v >= MIN) {
                         value = v + 1;
+						if(value<MIN){
+							value=MIN;
+						}
                         flag = false;
                         console.log("ĐÃ THEO " + userFolow);
                         console.log(value);
@@ -473,7 +479,10 @@ function getNumberInput(offersPrice) {
                 }else if (ACTION === isAutoBuy) {
                     if (v <= MAX) {
                         console.log("ĐÃ THEO BUY" + userFolow);
-                        value = v + 4;
+                        value = v + 5;
+						if(value>MAX){
+							value=MAX;
+						}
                         flag = false;
                         console.log(value);
                     } else {
