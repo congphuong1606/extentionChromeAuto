@@ -1,4 +1,3 @@
-
 let sellOffersPrice = [];
 let buyOffersPrice = [];
 
@@ -20,7 +19,10 @@ let getDataSuccess = true;
 
 let araybuyTam = [];
 let araySellTam = [];
+let timeDUR = 7;
 
+
+let timeUpdate = Date.now();
 
 localStorage.setItem('ACTIONgetSource1212', '3');
 localStorage.setItem('MAX', 21000 + '');
@@ -28,7 +30,10 @@ localStorage.setItem('MIN', 24000 + '');
 localStorage.setItem('NUMBER_STAMP', 0 + '');
 localStorage.setItem('userFolow', '');
 localStorage.setItem('infoAdURL', '');
+localStorage.setItem('timeDUR', '7');
 let urlTab1 = '';
+let flag = 0;
+let valueTam = 0;
 chrome.runtime.onMessage.addListener(function (request, sender) {
     if (request.action === "getSource") {
         ACTION = parseInt(request.source.split(".")[0]);
@@ -38,9 +43,13 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
         NUMBER_STAMP = request.NUMBER_STAMP;
         userFolow = request.userFolow;
         infoAdURL = request.infoAdURL;
+        timeDUR = request.timeDUR;
+        console.log(timeDUR);
+        flag = 0;
         urlTab1 = 'https://remitano.com/' + infoAdURL.split('/')[3] + '/vn';
         ID = request.source.split(".")[1];
         localStorage.setItem('ACTIONgetSource1212', ACTION + '');
+        localStorage.setItem('timeDUR', timeDUR + '');
         localStorage.setItem('infoAdURL', infoAdURL + '');
         localStorage.setItem('MAX', MAX + '');
         localStorage.setItem('MIN', MIN + '');
@@ -51,11 +60,18 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
             action: "close",
             source: ACTION
         });
+        if(ACTION===isAutoSell){
+            valueTam= MIN;
+        }
+        if(ACTION===isAutoSell){
+            valueTam= MAX;
+        }
 
 
     }
 });
-/*
+
+
 function clickPage2p(tabs) {
     chrome.tabs.executeScript(tabs[0].id, {
             "code":
@@ -70,361 +86,6 @@ function clickPage2p(tabs) {
 
 async function getDataTabb(tabs, index) {
     await sleep(3000);
-    chrome.tabs.executeScript(tabs[0].id, {
-        "code":
-        "function getData(){" +
-        "             var res=[];" +
-        "                var bodyDatas= document.getElementsByClassName('offer-body-meta');" +
-        "                var users= document.getElementsByClassName('offer-item-username');" +
-        "                 for(var i=0; i< bodyDatas.length ;i++){" +
-        "           var data={" +
-        "               numberPrice: bodyDatas[i].firstChild.innerText.split(' ')[0]," +
-        "               maxPrice: parseFloat(bodyDatas[i].lastChild.innerText.split(' ')[2].replace(',','.'))," +
-        "               userName: users[i].innerText" +
-        "               };" +
-        "                     res.push(data);" +
-        "                    }" +
-        "                return res;" +
-        "            }" +
-        "getData();"
-    }, function (result) {
-        if (index === 1) {
-            araybuyTam = [];
-            araySellTam = [];
-        }
-        let data = result[0];
-        for (let i = 0; i < 10; i++) {
-            if(data[i]!==undefined&&data[i]!==null){
-                if (i < 5) {
-
-                    araySellTam.push(data[i]);
-                } else {
-                    araybuyTam.push(data[i]);
-                }
-            }
-        }
-
-        if (index === 2) {
-            sellOffersPrice = araySellTam;
-            buyOffersPrice = araybuyTam;
-            if (ACTION === isAutoSell) {
-
-            } else {
-                /!* console.log("10 ACC ĐẶT QUẢNG CÁO MUA Ở 2 PAGE ĐẦU:");
-                 console.log(JSON.stringify(buyOffersPrice));*!/
-            }
-            /!*let valueInput = ACTION === isAutoSell ? getNumberInput(sellOffersPrice) : getNumberInput(buyOffersPrice);
-            scriptCodeInput = "var element = document.getElementsByClassName('input-group')[0].firstChild;var ev = new Event('input', { bubbles: true});ev.simulated = true;element.value = " + valueInput + ";element.defaultValue  = " + valueInput + ";element.dispatchEvent(ev);";
-            inputData(tabs);*!/
-
-            getDataSuccess = true;
-            chrome.runtime.sendMessage({
-                action: "dataTab2",
-                sellOffersPrice: sellOffersPrice,
-                buyOffersPrice: buyOffersPrice,
-            });
-        } else {
-            clickPage2p(tabs);
-        }
-    });
-
-}
-
-function getDataFirstPagep(tabs, index) {
-    chrome.tabs.executeScript(tabs[0].id, {
-            "code":
-            "function clickbtnColor(){\n" +
-            "var el= document.getElementsByClassName('text-btc-color');\n" +
-            "if(el[0]!=undefined){\n" +
-            "el[0].click();\n" +
-            "}\n" +
-            "};clickbtnColor();"
-        },
-        function (result) {
-            console.log("ĐANG CHUYỂN CHẾ ĐỘ XEM -> VND/ethUSDT");
-
-        });
-    getDataTabb(tabs, index);
-
-}
-
-function getDataTabb1(tabs) {
-    const urlTab1 = 'https://remitano.com/' + infoAdURL.split('/')[3] + '/vn';
-    if (tabs[0].url !== urlTab1) {
-        chrome.tabs.update(tabs[0].id, {url: urlTab1, active: false}, function (tab1) {
-            let listener = function (tabId, changeInfo, tab) {
-                if (tabId === tab1.id && changeInfo.status === 'complete') {
-                    chrome.tabs.onUpdated.removeListener(listener);
-                    getDataFirstPagep(tabs, 1);
-                }
-            };
-            chrome.tabs.onUpdated.addListener(listener);
-        });
-    } else {
-        chrome.tabs.executeScript(tabs[0].id, {
-                "code":
-                "document.getElementsByClassName('pagination-prev')[0].firstChild.click();" +
-                "document.getElementsByClassName('pagination-prev')[1].firstChild.click();"
-            },
-            function (result) {
-                console.log("Ở TAB LẤY DỮ LIỆU ĐANG CHUYỂN PAGE 1");
-                getDataFirstPagep(tabs, 1);
-            });
-    }
-}
-
-function getScript() {
-    let val = ACTION === isAutoSell ? getNumberInput(sellOffersPrice) : getNumberInput(buyOffersPrice);
-    return "var element = document.getElementsByClassName('input-group')[0].firstChild;var ev = new Event('input'," +
-        " { bubbles: true});ev.simulated = true;element.value = " + val + ";element.defaultValue  = " + val +
-        ";element.dispatchEvent(ev);";
-
-}
-
-async function clickSavep(tabs) {
-    await sleep(1000);
-    chrome.tabs.executeScript(tabs[1].id, {
-            "code":
-                "document.getElementsByClassName('btn-save-offer')[0].click()"
-        },
-        function (result) {
-            console.log("NHẤN SAVE");
-        });
-    await sleep(1000);
-    chrome.tabs.query({}, function (tabs) {
-        if (tabs[1].url !== infoAdURL) {
-            clickSavep(tabs)
-        } else {
-            startTab2(tabs)
-            console.log("ĐÃ LƯU LẠI QUẢNG CÁO");
-            console.log("____ĐANG_____________________");
-            console.log("________CHỜ________________");
-            console.log("____________LƯỢT___________");
-            console.log("_ _ _ _ _ _ _ _ __MỚI__ ___");
-            console.log(" ");
-            console.log(" ");
-        }
-    });
-}
-
-function inputDatab(tabs) {
-    chrome.tabs.executeScript(tabs[1].id, {"code": getScript()},
-        function (result) {
-            console.log("ĐANG NHẬP DỮ LIỆU VÀO [Giá ethUSD]");
-            clickSavep(tabs);
-        }
-    );
-}
-
-async function setupTab2b(tabs) {
-    chrome.tabs.executeScript(tabs[1].id, {
-            "code":
-            "function settup(){\n" +
-            "        var element =document.getElementsByClassName('btn btn-default btn-edit');\n" +
-            "\t\tif(element[0]!=undefined){\n" +
-            "               element[0].click();\n" +
-            "               return \"OK\"\n" +
-            "\t\t}else{\n" +
-            "\t\t\t\treturn \"FAIL\"\n" +
-            "        }\n" +
-            "};settup();"
-        },
-        function (result) {
-            console.log("NHẤN VÀO NÚT [Chỉnh sửa]");
-        });
-    await sleep(4000);
-    chrome.tabs.executeScript(tabs[1].id, {
-            "code":
-            "function clickChange(){\n" +
-            "        var btnChange =document.getElementsByClassName('btn-change');\n" +
-            "\t\tif(btnChange.length>0){\n" +
-            "            for(var i=0;i<btnChange.length;i++){\n" +
-            "                            btnChange[0].click();\n" +
-            "            };\n" +
-            "               return \"OK\"\n" +
-            "\t\t}else{\n" +
-            "\t\t\t  return \"FAIL\"\n" +
-            "        }\n" +
-            "};clickChange();"
-        },
-        function (result) {
-            console.log("NHẤN VÀO NÚT [Thay đổi]");
-            inputDatab(tabs)
-
-        });
-}
-
-async function startTab2(tabs) {
-    await sleep(3000);
-    if (tabs[1].url !== infoAdURL) {
-        chrome.tabs.update(tabs[1].id, {url: infoAdURL, active: false}, function (tab2) {
-            let listener = function (tabId, changeInfo, tab) {
-                if (tabId === tab2.id && changeInfo.status === 'complete') {
-                    setupTab2b(tabs);
-                    chrome.tabs.onUpdated.removeListener(listener);
-                }
-            };
-            chrome.tabs.onUpdated.addListener(listener);
-        });
-    } else {
-        setupTab2b(tabs);
-    }
-
-}
-
-function start() {
-    chrome.tabs.query({}, function (tabs) {
-        if (getDataSuccess) {
-            getDataSuccess = false;
-            console.log("LUOT MOI");
-            getDataTabb1(tabs);
-        }
-
-    });
-}*/
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-
-setInterval(function () {
-
-  if (ACTION !== isOff) {
-        console.log("SAU MOT GIAY");
-       refreshTab()
-    }
-}, 20000);
-
-let flag=0;
-
-
-function refreshTab() {
-    chrome.tabs.query({}, function (tabs) {
-        if (isloaded1) {
-            isloaded1 = false;
-            if (tabs[0].url !== urlTab1||flag==0) {
-                flag=1;
-                chrome.tabs.update(tabs[0].id, {url: urlTab1, active: false}, function (tab1) {
-                    let listener = function (tabId, changeInfo, tab) {
-                        if (tabId === tab1.id && changeInfo.status === 'complete') {
-                            chrome.tabs.onUpdated.removeListener(listener);
-                            getDataFirstPage(tabs, 1);
-                        }
-                    };
-                    chrome.tabs.onUpdated.addListener(listener);
-                });
-            } else {
-                chrome.tabs.executeScript(tabs[0].id, {
-                        "code":"document.getElementsByClassName('pagination-prev')[0].firstChild.click();" +
-                        "document.getElementsByClassName('pagination-prev')[1].firstChild.click();"
-                       /* "function  clickPage1(){\n" +
-                        "    var element=document.getElementsByClassName('pagination');\n" +
-                        "   for(var index=0;index<element.length;index++){\n" +
-                        "       var page =element[index].children;\n" +
-                        "        for(var i=0;i<page.length;i++){\n" +
-                        "                 if(page[i].innerText=='1'){\n" +
-                        "                      page[i].firstChild.click();\n" +
-                        "                 }\n" +
-                        "            }\n" +
-                        "   }\n" +
-                        "\n" +
-                        "};clickPage1();"*/
-                    },
-                    function (result) {
-                        console.log("Ở TAB LẤY DỮ LIỆU ĐANG CHUYỂN PAGE 1");
-                        getDataFirstPage(tabs, 1);
-                    });
-            }
-        }
-        if (isloaded2) {
-            isloaded2 = false;
-            if (tabs[1].url !== infoAdURL) {
-                chrome.tabs.update(tabs[1].id, {url: infoAdURL, active: false}, function (tab2) {
-                    let listener = function (tabId, changeInfo, tab) {
-                        if (tabId === tab2.id && changeInfo.status === 'complete') {
-                            setupTab2(tabs, tab2);
-                            chrome.tabs.onUpdated.removeListener(listener);
-                        }
-                    };
-                    chrome.tabs.onUpdated.addListener(listener);
-                });
-            } else {
-                setupTab2(tabs);
-            }
-        }
-    });
-}
-
-
-
-
-async function setupTab2(tabs, tab2) {
-    chrome.tabs.executeScript(tabs[1].id, {
-            "code":
-            "function settup(){\n" +
-            "        var element =document.getElementsByClassName('btn btn-default btn-edit');\n" +
-            "\t\tif(element[0]!=undefined){\n" +
-            "               element[0].click();\n" +
-            "               return \"OK\"\n" +
-            "\t\t}else{\n" +
-            "\t\t\t\treturn \"FAIL\"\n" +
-            "        }\n" +
-            "};settup();"
-        },
-
-        function (result) {
-            console.log("NHẤN VÀO NÚT [Chỉnh sửa]");
-        });
-    await sleep(4000);
-    chrome.tabs.executeScript(tabs[1].id, {
-            "code":
-            "function clickChange(){\n" +
-            "        var btnChange =document.getElementsByClassName('btn-change');\n" +
-            "\t\tif(btnChange.length>0){\n" +
-            "            for(var i=0;i<btnChange.length;i++){\n" +
-            "                            btnChange[0].click();\n" +
-            "            };\n" +
-            "               return \"OK\"\n" +
-            "\t\t}else{\n" +
-            "\t\t\t  return \"FAIL\"\n" +
-            "        }\n" +
-            "};clickChange();"
-        },
-        function (result) {
-            console.log("NHẤN VÀO NÚT [Thay đổi]");
-            if (isloaded1) {
-                inputData(tabs)
-            }
-            isloaded2 = true;
-        });
-}
-
-function clickPage2(tabs) {
-    chrome.tabs.executeScript(tabs[0].id, {
-            "code":"document.getElementsByClassName('pagination-next')[0].firstChild.click();" +
-            "document.getElementsByClassName('pagination-next')[1].firstChild.click();"
-            /*"function  clickPage1(){\n" +
-            "    var element=document.getElementsByClassName('pagination');\n" +
-            "   for(var index=0;index<element.length;index++){\n" +
-            "       var page =element[index].children;\n" +
-            "        for(var i=0;i<page.length;i++){\n" +
-            "                 if(page[i].innerText=='2'){\n" +
-            "                      page[i].firstChild.click();\n" +
-            "                 }\n" +
-            "            }\n" +
-            "   }\n" +
-            "\n" +
-            "};clickPage1();"*/
-        },
-        function (result) {
-            console.log("Ở TAB LẤY DỮ LIỆU ĐANG CHUYỂN PAGE 2");
-            getDataFirstPage(tabs, 2);
-        });
-}
-
-async function getDataTab(tabs, index) {
-    await sleep(2000);
     chrome.tabs.executeScript(tabs[0].id, {
         "code":
         "function getData(){\n" +
@@ -463,32 +124,36 @@ async function getDataTab(tabs, index) {
         "};getData();"
     }, function (result) {
         let data = result[0];
-        if(data.length<10){
+        if (data.length < 10) {
             console.log("data.length");
             chrome.tabs.update(tabs[0].id, {url: urlTab1, active: false}, function (tab1) {
                 let listener = function (tabId, changeInfo, tab) {
                     if (tabId === tab1.id && changeInfo.status === 'complete') {
                         chrome.tabs.onUpdated.removeListener(listener);
-                        getDataFirstPage(tabs, index);
+                        getDataFirstPagep(tabs, index);
                     }
                 };
                 chrome.tabs.onUpdated.addListener(listener);
             });
-        }else {
+        } else {
+
             if (index === 1) {
-                sellOffersPrice = [];
-                buyOffersPrice = [];
+                araybuyTam = [];
+                araySellTam = [];
             }
-            data.forEach(item=>{
-                if(item.type==='buy'){
-                    buyOffersPrice.push(item);
+            data.forEach(item => {
+                if (item.type === 'buy') {
+                    araybuyTam.push(item);
                 }
-                if(item.type==='sell'){
-                    sellOffersPrice.push(item);
+                if (item.type === 'sell') {
+                    araySellTam.push(item);
                 }
 
             });
+
             if (index === 2) {
+                sellOffersPrice = araySellTam;
+                buyOffersPrice = araybuyTam;
                 if (ACTION === isAutoSell) {
                     console.log("10 ACC ĐẶT QUẢNG CÁO BÁN Ở 2 PAGE ĐẦU:");
                     console.log(JSON.stringify(sellOffersPrice));
@@ -496,55 +161,192 @@ async function getDataTab(tabs, index) {
                     console.log("10 ACC ĐẶT QUẢNG CÁO MUA Ở 2 PAGE ĐẦU:");
                     console.log(JSON.stringify(buyOffersPrice));
                 }
-                let valueInput = ACTION === isAutoSell ? getNumberInput(sellOffersPrice) : getNumberInput(buyOffersPrice);
-                scriptCodeInput = "var element = document.getElementsByClassName('input-group')[0].firstChild;var ev = new Event('input', { bubbles: true});ev.simulated = true;element.value = " + valueInput + ";element.defaultValue  = " + valueInput + ";element.dispatchEvent(ev);";
-                if (isloaded2) {
-                    inputData(tabs)
-                }
-                isloaded1 = true;
-
+                getDataSuccess = true;
             } else {
-                clickPage2(tabs);
+                clickPage2p(tabs);
             }
         }
+    });
 
+}
+
+function getDataFirstPagep(tabs, index) {
+    chrome.tabs.executeScript(tabs[0].id, {
+            "code":
+            "function clickbtnColor(){\n" +
+            "var el= document.getElementsByClassName('text-btc-color');\n" +
+            "if(el[0]!=undefined){\n" +
+            "el[0].click();\n" +
+            "}\n" +
+            "};clickbtnColor();"
+        },
+        function (result) {
+            console.log("ĐANG CHUYỂN CHẾ ĐỘ XEM -> VND/ethUSDT");
+
+        });
+    getDataTabb(tabs, index);
+
+}
+
+function getDataTabb1(tabs) {
+    if (tabs[0].url !== urlTab1 || flag === 0) {
+        flag = 1;
+        chrome.tabs.update(tabs[0].id, {url: urlTab1, active: false}, function (tab1) {
+            let listener = function (tabId, changeInfo, tab) {
+                if (tabId === tab1.id && changeInfo.status === 'complete') {
+                    chrome.tabs.onUpdated.removeListener(listener);
+                    getDataFirstPagep(tabs, 1);
+                }
+            };
+            chrome.tabs.onUpdated.addListener(listener);
+        });
+    } else {
+        chrome.tabs.executeScript(tabs[0].id, {
+                "code": "document.getElementsByClassName('pagination-prev')[0].firstChild.click();" +
+                "document.getElementsByClassName('pagination-prev')[1].firstChild.click();"
+            },
+            function (result) {
+                console.log("Ở TAB LẤY DỮ LIỆU ĐANG CHUYỂN PAGE 1");
+                getDataFirstPagep(tabs, 1);
+            });
+    }
+}
+
+
+function start() {
+    chrome.tabs.query({}, function (tabs) {
+        if (getDataSuccess) {
+            getDataSuccess = false;
+            console.log("LUOT MOI");
+            getDataTabb1(tabs);
+        }
     });
 }
 
-async function inputData(tabs) {
+let getDataSuccess2 = true;
 
-    chrome.tabs.executeScript(tabs[1].id, {"code": scriptCodeInput},
-        function (result) {
-            console.log("ĐANG NHẬP DỮ LIỆU VÀO [Giá ethUSD]");
-            clickSave(tabs);
-        }
-    );
-
+function getDataTabb2(tabs) {
+    if (tabs[1].url !== infoAdURL) {
+        chrome.tabs.update(tabs[1].id, {url: infoAdURL, active: false}, function (tab2) {
+            let listener = function (tabId, changeInfo, tab) {
+                if (tabId === tab2.id && changeInfo.status === 'complete') {
+                    setupTab2(tabs, tab2);
+                    chrome.tabs.onUpdated.removeListener(listener);
+                }
+            };
+            chrome.tabs.onUpdated.addListener(listener);
+        });
+    } else {
+        setupTab2(tabs);
+    }
 }
 
-async function getDataFirstPage(tabs, index) {
-    if (index === 1) {
-        chrome.tabs.executeScript(tabs[0].id, {
-                "code":
-                    "document.getElementsByClassName('text-btc-color')[0].click()"
-            },
-            function (result) {
-                console.log("ĐANG CHUYỂN CHẾ ĐỘ XEM -> VND/ethUSDT");
-                getDataTab(tabs, index);
-            });
+function start2() {
+    chrome.tabs.query({}, function (tabs) {
+        if (getDataSuccess2) {
+            getDataSuccess2 = false;
+            console.log("LUOT MOI");
+            getDataTabb2(tabs);
+        }
+    });
+}
+
+
+setInterval(function () {
+    if (ACTION !== isOff) {
+        start();
+    }
+}, 1000);
+
+setInterval(function () {
+    if (ACTION !== isOff) {
+        start2();
+    }
+}, 1000);
+
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+async function setupTab2(tabs, tab2) {
+    chrome.tabs.executeScript(tabs[1].id, {
+            "code":
+            "function settup(){\n" +
+            "        var element =document.getElementsByClassName('btn btn-default btn-edit');\n" +
+            "\t\tif(element[0]!=undefined){\n" +
+            "               element[0].click();\n" +
+            "               return \"OK\"\n" +
+            "\t\t}else{\n" +
+            "\t\t\t\treturn \"FAIL\"\n" +
+            "        }\n" +
+            "};settup();"
+        },
+
+        function (result) {
+            console.log("NHẤN VÀO NÚT [Chỉnh sửa]");
+        });
+    await sleep(4000);
+    chrome.tabs.executeScript(tabs[1].id, {
+            "code":
+            "function clickChange(){\n" +
+            "        var btnChange =document.getElementsByClassName('btn-change');\n" +
+            "\t\tif(btnChange.length>0){\n" +
+            "            for(var i=0;i<btnChange.length;i++){\n" +
+            "                            btnChange[0].click();\n" +
+            "            };\n" +
+            "               return \"OK\"\n" +
+            "\t\t}else{\n" +
+            "\t\t\t  return \"FAIL\"\n" +
+            "        }\n" +
+            "};clickChange();"
+        },
+        function (result) {
+            console.log("NHẤN VÀO NÚT [Thay đổi]");
+            directInput(tabs);
+
+
+        });
+}
+
+async function directInput(tabs) {
+
+    if (parseInt((Date.now() - timeUpdate)) >= ((timeDUR - 3) * 1000)) {
+        console.log("ĐÃ ĐỦ THỜI GIAN NHẬP GIÁ MỚI " + parseInt((((Date.now() - timeUpdate)) / 1000) + 3));
+        inputData(tabs);
     } else {
-        getDataTab(tabs, index);
+        await sleep(1000);
+        console.log("ĐANG CHỜ ĐẾN GIÂY THỨ " + parseInt((((Date.now() - timeUpdate)) / 1000) + 3));
+        directInput(tabs);
+    }
+}
+
+
+async function inputData(tabs) {
+    if (sellOffersPrice.length === 10 && buyOffersPrice.length === 10) {
+        let valueInput = ACTION === isAutoSell ? getNumberInput(sellOffersPrice) : getNumberInput(buyOffersPrice);
+        scriptCodeInput = "var element = document.getElementsByClassName('input-group')[0].firstChild;var ev = new Event('input', { bubbles: true});ev.simulated = true;element.value = " + valueInput + ";element.defaultValue  = " + valueInput + ";element.dispatchEvent(ev);";
+        chrome.tabs.executeScript(tabs[1].id, {"code": scriptCodeInput},
+            function (result) {
+                console.log("ĐANG NHẬP DỮ LIỆU VÀO [Giá ethUSD]");
+                clickSave(tabs);
+            }
+        );
+    } else {
+        getDataSuccess2 = true;
     }
 
-
 }
 
-async function sleepp(ms) {
-    await sleep(ms);
+
+async function aWait() {
+    await sleep(2000);
+    getDataSuccess2 = true;
 }
 
 async function clickSave(tabs) {
-    await sleep(1000);
+    await sleep(500);
     chrome.tabs.executeScript(tabs[1].id, {
             "code":
                 "document.getElementsByClassName('btn-save-offer')[0].click()"
@@ -557,6 +359,9 @@ async function clickSave(tabs) {
         if (tabs[1].url !== infoAdURL) {
             clickSave(tabs)
         } else {
+            timeUpdate = Date.now();
+            aWait();
+
             console.log("ĐÃ LƯU LẠI QUẢNG CÁO");
             console.log("____ĐANG_____________________");
             console.log("________CHỜ________________");
@@ -607,20 +412,33 @@ function getValue(offersPrice) {
                     value = item + 1;
                     flag = false;
                 }
-            }
-            if (ACTION === isAutoBuy) {
+            }else if (ACTION === isAutoBuy) {
                 if (item <= MAX) {
                     value = item - 1;
                     flag = false;
                 }
+            }else {
+                value="Đã tắt tool";
             }
         }
     });
     if (flag) {
         if (array1.length > 0) {
-            value = ACTION === isAutoBuy ? MAX : MIN;
+            if(ACTION === isAutoBuy ){
+                value=MAX;
+            }else if(ACTION === isAutoBuy ) {
+                value=MIN;
+            }else {
+                value="Đã tắt tool";
+            }
         } else {
-            value = ACTION === isAutoBuy ? Math.min(...array) : Math.max(...array);
+            if(ACTION === isAutoBuy ){
+                value=Math.min(...array);
+            }else if(ACTION === isAutoBuy ) {
+                value=Math.max(...array);
+            }else {
+                value="Đã tắt tool";
+            }
         }
 
     }
@@ -629,41 +447,41 @@ function getValue(offersPrice) {
 }
 
 function getNumberInput(offersPrice) {
-    let value = 0;
+    let value = 'Đã tắt tool';
     if (userFolow !== '') {
         let flag = true;
         offersPrice.forEach(item => {
-            if (item !== null && userFolow === item.userName) {
-                let v = parseFloat(item.numberPrice.replace(",", "."));
+            if (item !== null && userFolow.trim() === item.userName) {
+                let v = item.numberPrice;
                 if (ACTION === isAutoSell) {
                     v = v - (v * 0.01);
-                }
-                if (ACTION === isAutoBuy) {
+                }else if (ACTION === isAutoBuy) {
                     v = v + (v * 0.01);
                 }
-                const stringVal = (v * 1000) + '';
-                v = parseInt(stringVal.split(".")[0]);
+
+                v = parseInt((v * 1000));
                 if (ACTION === isAutoSell) {
                     if (v >= MIN) {
                         value = v + 1;
                         flag = false;
-                        console.log("v => giá bán");
+                        console.log("ĐÃ THEO " + userFolow);
                         console.log(value);
                     } else {
                         flag = false;
                         value = getValue(offersPrice);
                     }
-                }
-                if (ACTION === isAutoBuy) {
+                }else if (ACTION === isAutoBuy) {
                     if (v <= MAX) {
-                        console.log("v <= giá mua");
-                        value = v - 1;
+                        console.log("ĐÃ THEO BUY" + userFolow);
+                        value = v + 4;
                         flag = false;
                         console.log(value);
                     } else {
                         flag = false;
                         value = getValue(offersPrice);
                     }
+                }else {
+                    value="Đã tắt tool";
                 }
             }
         });

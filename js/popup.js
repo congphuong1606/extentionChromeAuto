@@ -10,6 +10,8 @@ let stampCanBuy = 21000;
 let stampCanSell = 24000;
 window.onload = onWindowLoad;
 
+let timeDUR = 15;
+
 function clickTab1() {
     document.getElementById("body-tab1").style.display = "block";
     document.getElementById("body-tab2").style.display = "none";
@@ -28,6 +30,7 @@ function clickTab2() {
     document.getElementById("tab2").style.backgroundColor = "white";
 
 }
+
 chrome.tabs.query({'active': false, 'lastFocusedWindow': true, 'currentWindow': true}, function (tabs) {
     var url = tabs[0].url;
     console.log("URL URL URL");
@@ -86,6 +89,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function clickSavebtn() {
     userFolow = document.getElementById("input-folow-user").value + '';
+    timeDUR = parseInt(document.getElementById("input-time-dur").value);
+
+    timeDUR = timeDUR <= 7 ? 7 : timeDUR;
     id = document.getElementById("input-id").value;
     infoAdURL = document.getElementById("input-url-ad").value;
     max = document.getElementById("input-mua").value;
@@ -99,6 +105,7 @@ function clickSavebtn() {
             min: min,
             max: max,
             NUMBER_STAMP: NUMBER_STAMP,
+            timeDUR: timeDUR,
             infoAdURL: infoAdURL,
             source: value + "." + id,
             userFolow: userFolow
@@ -121,6 +128,7 @@ function clickSavebtn() {
                         min: min,
                         max: max,
                         NUMBER_STAMP: NUMBER_STAMP,
+                        timeDUR: timeDUR,
                         infoAdURL: infoAdURL,
                         source: value + "." + id,
                         userFolow: userFolow
@@ -145,6 +153,7 @@ function clickSavebtn() {
                         min: min,
                         max: max,
                         NUMBER_STAMP: NUMBER_STAMP,
+                        timeDUR: timeDUR,
                         infoAdURL: infoAdURL,
                         source: value + "." + id,
                         userFolow: userFolow
@@ -176,6 +185,7 @@ function onWindowLoad() {
     infoAdURL = localStorage.getItem('infoAdURL');
     autoMuaBanMore = localStorage.getItem('autoMuaBanMore');
     stampCanBuy = parseInt(localStorage.getItem('stampCanBuy'));
+    timeDUR = parseInt(localStorage.getItem('timeDUR'));
     stampCanSell = parseInt(localStorage.getItem('stampCanSell'));
     if (autoMuaBanMore === 'on') {
         document.getElementById("inputSw").checked = true;
@@ -200,6 +210,7 @@ function onWindowLoad() {
     document.getElementById("input-buy-more").value = stampCanBuy;
     document.getElementById("input-sell-more").value = stampCanSell;
     document.getElementById("input-folow-user").value = userFolow;
+    document.getElementById("input-time-dur").value = timeDUR;
     value = parseInt(localStorage.getItem('ACTIONgetSource1212'));
     console.log(value);
     let radio1 = document.querySelector('#radio1');
