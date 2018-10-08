@@ -326,6 +326,7 @@ async function directInput(tabs) {
 async function inputData(tabs) {
     if (sellOffersPrice.length === 10 && buyOffersPrice.length === 10) {
         let valueInput = ACTION === isAutoSell ? getNumberInput(sellOffersPrice) : getNumberInput(buyOffersPrice);
+		valueInput = parseInt(valueInput);
         scriptCodeInput = "var element = document.getElementsByClassName('input-group')[0].firstChild;var ev = new Event('input', { bubbles: true});ev.simulated = true;element.value = " + valueInput + ";element.defaultValue  = " + valueInput + ";element.dispatchEvent(ev);";
         chrome.tabs.executeScript(tabs[1].id, {"code": scriptCodeInput},
             function (result) {
@@ -380,14 +381,14 @@ function getValue(offersPrice) {
     let array = [];
     offersPrice.forEach(item => {
         if (item !== null) {
-            let v = item.numberPrice;
+            let v = item.numberPrice*1000;
             if (ACTION === isAutoSell) {
                 v = v - (v * 0.01);
             }
             if (ACTION === isAutoBuy) {
                 v = v + (v * 0.01);
             }
-            v = parseInt((v * 1000));
+         
             array.push(v);
             if (item.maxPrice >= NUMBER_STAMP) {
                 array1.push(v);
@@ -409,12 +410,16 @@ function getValue(offersPrice) {
         if (flag && item !== null) {
             if (ACTION === isAutoSell) {
                 if (item >= MIN) {
-                    value = item + 1;
+                  
+					value = item -1;
+						if(value<MIN){
+							value=MIN;
+						}
                     flag = false;
                 }
             }else if (ACTION === isAutoBuy) {
                 if (item <= MAX) {
-					value = item + 5;
+					value = item + 4;
 						if(value>MAX){
 							value=MAX;
 						}
@@ -429,7 +434,7 @@ function getValue(offersPrice) {
         if (array1.length > 0) {
             if(ACTION === isAutoBuy ){
                 value=MAX;
-            }else if(ACTION === isAutoBuy ) {
+            }else if(ACTION === isAutoSell ) {
                 value=MIN;
             }else {
                 value="Đã tắt tool";
@@ -437,7 +442,7 @@ function getValue(offersPrice) {
         } else {
             if(ACTION === isAutoBuy ){
                 value=Math.min(...array);
-            }else if(ACTION === isAutoBuy ) {
+            }else if(ACTION === isAutoSell ) {
                 value=Math.max(...array);
             }else {
                 value="Đã tắt tool";
@@ -455,19 +460,14 @@ function getNumberInput(offersPrice) {
         let flag = true;
         offersPrice.forEach(item => {
             if (item !== null && userFolow.trim() === item.userName) {
-                let v = item.numberPrice;
+                let v = item.numberPrice*1000;
+                 
                 if (ACTION === isAutoSell) {
-                    v = v - (v * 0.01);
-                }else if (ACTION === isAutoBuy) {
-                    v = v + (v * 0.01);
-                }
-
-                v = parseInt((v * 1000));
-                if (ACTION === isAutoSell) {
+					v = v - (v * 0.01);
                     if (v >= MIN) {
-                        value = v + 1;
-						if(value<MIN){
-							value=MIN;
+                        value = v - 1;
+						if(value < MIN){
+							value = MIN;
 						}
                         flag = false;
                         console.log("ĐÃ THEO " + userFolow);
@@ -477,9 +477,10 @@ function getNumberInput(offersPrice) {
                         value = getValue(offersPrice);
                     }
                 }else if (ACTION === isAutoBuy) {
+					v = v + (v * 0.01);
                     if (v <= MAX) {
                         console.log("ĐÃ THEO BUY" + userFolow);
-                        value = v + 5;
+                        value = v + 4;
 						if(value>MAX){
 							value=MAX;
 						}
