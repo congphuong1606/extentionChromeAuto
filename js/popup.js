@@ -6,6 +6,7 @@ let max = 21000;
 let min = 25000;
 let NUMBER_STAMP = 0;
 let autoMuaBanMore = "off";
+let bamBangGia = "uncheck";
 let stampCanBuy = 21000;
 let stampCanSell = 24000;
 window.onload = onWindowLoad;
@@ -41,6 +42,18 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("btn-save").addEventListener("click", clickSavebtn);
     document.getElementById("tab1").addEventListener("click", clickTab1);
     document.getElementById("tab2").addEventListener("click", clickTab2);
+    document.querySelector('#showAlert').addEventListener('change', changeCheckboxHandler);
+    function changeCheckboxHandler(){
+        //Do Something...maybe another function showAlert(), for instance
+        if(showAlert.checked){
+            console.log('check');
+            bamBangGia = "checked";
+        }
+        else{
+            console.log('uncheck')
+            bamBangGia = "uncheck";
+        }
+    }
     var radios = document.querySelectorAll('input[type=radio][name="theRadioGroupName"]');
 
     function changeHandler(event) {
@@ -58,7 +71,14 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("mua-ban").style.display = "unset";
             document.getElementById("div-input-ban").style.display = "table-row";
             document.getElementById("div-input-mua").style.display = "none";
-        } else {
+        }else if (this.value === "4") {
+            value = 4;
+            console.log('value', '4');
+            document.getElementById("mua-ban").style.display = "unset";
+            document.getElementById("div-input-ban").style.display = "table-row";
+            document.getElementById("div-input-mua").style.display = "table-row";
+        }
+        else {
             value = 3;
             document.getElementById("mua-ban").style.display = "none";
         }
@@ -107,6 +127,7 @@ function clickSavebtn() {
             NUMBER_STAMP: NUMBER_STAMP,
             timeDUR: timeDUR,
             infoAdURL: infoAdURL,
+            bamBangGia: bamBangGia,
             source: value + "." + id,
             userFolow: userFolow
         });
@@ -129,6 +150,7 @@ function clickSavebtn() {
                         max: max,
                         NUMBER_STAMP: NUMBER_STAMP,
                         timeDUR: timeDUR,
+                        bamBangGia: bamBangGia,
                         infoAdURL: infoAdURL,
                         source: value + "." + id,
                         userFolow: userFolow
@@ -153,6 +175,7 @@ function clickSavebtn() {
                         min: min,
                         max: max,
                         NUMBER_STAMP: NUMBER_STAMP,
+                        bamBangGia: bamBangGia,
                         timeDUR: timeDUR,
                         infoAdURL: infoAdURL,
                         source: value + "." + id,
@@ -183,6 +206,7 @@ function onWindowLoad() {
     clickTab1();
     id = localStorage.getItem('IDgetSource1212');
     infoAdURL = localStorage.getItem('infoAdURL');
+    bamBangGia = localStorage.getItem('bamBangGia');
     autoMuaBanMore = localStorage.getItem('autoMuaBanMore');
     stampCanBuy = parseInt(localStorage.getItem('stampCanBuy'));
     timeDUR = parseInt(localStorage.getItem('timeDUR'));
@@ -216,6 +240,11 @@ function onWindowLoad() {
     let radio1 = document.querySelector('#radio1');
     let radio2 = document.querySelector('#radio2');
     let radio3 = document.querySelector('#radio3');
+    if(bamBangGia==='checked'){
+        document.querySelector('#showAlert').checked = true;
+    }else {
+        document.querySelector('#showAlert').checked = false;
+    }
     switch (value) {
         case 1:
             console.log("AAAAAAAAAAA");
