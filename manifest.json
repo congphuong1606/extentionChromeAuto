@@ -13,7 +13,7 @@
   		"default_popup": "popup.html"
 	},
  	"icons": { 
-  		"128" : "img/icon_128.png"
+  		"128" : "img/icon.png"
 	},
 	"background": {
 		"scripts": ["js/app.js","js/fill-data.js"]

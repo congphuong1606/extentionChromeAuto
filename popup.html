@@ -6,7 +6,7 @@
 
     <title>Auto buy&sell Remitano</title>
 </head>
-<body style="width: 600px;">
+<body style="width: 650px;">
 
 <h1 style="text-align: center;color: #5bc0de"> Auto buy&sell Remitano</h1>
 <h4 style="text-align: center;color: gray;font-weight: normal;    margin-top: -10px;">@Author:PhuongCong - v1.0</h4>
@@ -14,14 +14,14 @@
 <button id="tab1" class="btn_tab">
     Auto mua|Bán
 </button>
-<button id="tab2" class="btn_tab">
+<button id="tab2" class="btn_tab" disabled>
     Đơn tiềm năng
 </button>
 <br>
 <br>
 <div id="body-tab1">
 
-    <table style="width: 600px">
+    <table style="width: 650px">
         <thead>
         <tr id="radio-group">
             <th><label class="container" style="font-size:18px;color: #d9534f!important;">Mua
@@ -45,72 +45,101 @@
         </thead>
 
     </table>
-    <table id="mua-ban" style="width: 600px">
-        <thead>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 600px!important;display: none;">
-            <td><label style="font-size: 16px;color: gray;width: 40%"><span>。</span>ID quảng cáo</label></td>
-            <td><input id="input-id" class="w3-input" style=" height: 25px " type="number"></td>
-            <td><label style="font-size: 12px;color: red" id="error"></label></td>
-        </tr>
+    <div style="width: 650px;overflow-y: auto;overflow-x: hidden;max-height: 340px">
+        <table id="mua-ban" style="width: 650px;">
+            <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
 
-        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 600px!important;">
-            <td><label style="font-size: 16px;color: gray;width: 40%"><span>。</span>URL chi tiết QC</label></td>
-            <td><input id="input-url-ad" class="w3-input" style=" height: 25px " type="text"></td>
-            <td><label style="font-size: 12px;color: red" id="error-url"></label></td>
-        </tr>
-
-        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 600px!important;" id="div-input-ban">
-            <td><label style="font-size: 16px;color: gray;width: 40%"><span>。</span>Thấp nhất có thể bán </label></td>
-            <td><input id="input-ban" class="w3-input" style=" height: 25px " type="number"></td>
-            <td><label style="font-size: 12px;color: red" id="error-ban"></label></td>
-        </tr>
-        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 600px!important;" id="div-input-mua">
-            <td><label style="font-size: 16px;color: gray;width: 40%"><span>。</span>Cao nhất có thể mua </label></td>
-            <td><input id="input-mua" class="w3-input" style=" height: 25px " type="number"></td>
-            <td><label style="font-size: 12px;color: red" id="error-mua"></label></td>
-        </tr>
-
-        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 600px!important;">
-            <td><label style="font-size: 16px;color: gray;width: 40%"><span>。</span>Mốc số lượng</label></td>
-            <td><input id="input-sle" class="w3-input" style=" height: 25px " type="number"></td>
-            <td><label style="font-size: 12px;color: red" id="error-sle"></label></td>
-        </tr>
-        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 600px!important;">
-            <td><label style="font-size: 16px;color: gray;width: 40%"><span style="color: gray">。</span>Bám theo đối
-                tượng </label></td>
-            <td><input id="input-folow-user" class="w3-input" style=" height: 25px " type="text"></td>
-            <td>
-                <div style="margin-left: 20px">
-                    <input type="checkbox" id="showAlert" name="showAlert" style="width: 20px;float: left;"/>
-                    <label for="showAlert" style="font-size: 16px;    margin-top: 12px!important;
+            <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;" id="urlmua">
+                <td><label style="font-size: 16px;width: 40%;color: #d9534f"><span>。</span>ID QC MUA</label></td>
+                <td colspan="2"><input id="id-ad-mua" class="w3-input" style=" height: 25px " type="text"></td>
+                <td><label style="font-size: 12px;color: red" id="error-id-mua"></label></td>
+            </tr>
+            <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;" id="div-input-mua">
+                <td><label style="font-size: 16px;color: #d9534f;width: 40%"><span>。</span>Đặt mua cao nhất</label></td>
+                <td colspan="2"><input id="max-mua" class="w3-input" style=" height: 25px " type="number"></td>
+                <td><label style="font-size: 12px;color: red" id="error-mua"></label></td>
+            </tr>
+            <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;color: #d9534f;" id="div-ignore-toida-mua">
+                <td><label style="font-size: 16px;color: #d9534f;width: 40%"><span>。</span>Số lượng mua</label>
+                </td>
+                <td colspan="2"><input id="ignore-toida-mua" class="w3-input" style=" height: 25px " type="number"></td>
+                <td><label style="font-size: 12px;color: red" id="error-sle"></label></td>
+            </tr>
+            <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;color: #d9534f;" id="div=folow-user-mua">
+                <td><label style="font-size: 16px;color: #d9534f;width: 40%"><span style="color: gray">。</span>Bám đối
+                    tượng(mua)</label></td>
+                <td colspan="2"><input id="input-folow-user-mua" class="w3-input" style=" height: 25px " type="text">
+                </td>
+                <td>
+                    <div style="margin-left: 20px">
+                        <input type="checkbox" id="showAlertMua" name="showAlert" style="width: 20px;float: left;"/>
+                        <label for="showAlertMua" style="font-size: 16px; color: #d9534f;   margin-top: 12px!important;
     font-size: 16px;
     float: right;
-">Đặt bằng giá</label>
-                </div>
-            </td>
-        </tr>
-        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 600px!important;">
-            <td><label style="font-size: 16px;color: gray;width: 40%"><span style="color: gray">。</span>Khoảng (s) thay
-                đổi giá</label></td>
-            <td><input id="input-time-dur" class="w3-input" style=" height: 25px " type="number"></td>
-            <td><label style="font-size: 12px;color: red" id="error-time-dur"></label></td>
-        </tr>
-        </tbody>
+">Bằng giá</label>
+                    </div>
+                </td>
+            </tr>
 
-    </table>
+            <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;" id="urlban">
+                <td><label style="font-size: 16px;color: #5cb85c;width: 40%"><span>。</span>ID QC BÁN</label></td>
+                <td colspan="2"><input id="id-ad-ban" class="w3-input" style=" height: 25px " type="text"></td>
+                <td><label style="font-size: 12px;color: red" id="error-id-ban"></label></td>
+            </tr>
+
+            <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;" id="div-input-ban">
+                <td><label style="font-size: 16px;color: #5cb85c;width: 40%"><span>。</span>Đặt bán thấp nhất</label>
+                </td>
+                <td colspan="2"><input id="min-ban" class="w3-input" style=" height: 25px " type="number"></td>
+                <td><label style="font-size: 12px;color: red" id="error-ban"></label></td>
+            </tr>
+
+            <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;" id="div-ignore-toida-ban">
+                <td><label style="font-size: 16px;color: #5cb85c;width: 40%"><span>。</span>Số lượng bán</label>
+                </td>
+                <td colspan="2"><input id="ignore-toida-ban" class="w3-input" style=" height: 25px " type="number"></td>
+                <td><label style="font-size: 12px;color: red"></label></td>
+            </tr>
+            <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;" id="div=folow-user-ban">
+                <td><label style="font-size: 16px;color: #5cb85c;width: 40%"><span style="color: gray">。</span>Bám đối
+                    tượng (bán)</label></td>
+                <td colspan="2"><input id="input-folow-user-ban" class="w3-input" style=" height: 25px " type="text">
+                </td>
+                <td>
+                    <div style="margin-left: 20px">
+                        <input type="checkbox" id="showAlertBan" name="showAlert" style="width: 20px;float: left;"/>
+                        <label for="showAlertBan" style="font-size: 16px;  color: #5cb85c;  margin-top: 12px!important;
+    font-size: 16px;
+    float: right;
+">Bằng giá</label>
+                    </div>
+                </td>
+            </tr>
+            <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;">
+                <td><label style="font-size: 16px;color: gray;width: 40%"><span style="color: gray">。</span>Khoảng (s)
+                    thay
+                    đổi giá</label></td>
+                <td colspan="2"><input id="input-time-dur" class="w3-input" style=" height: 25px " type="number"></td>
+                <td><label style="font-size: 12px;color: red" id="error-time-dur"></label></td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
 
 
 </div>
 
 <div id="body-tab2">
-    <table style="width: 600px">
+    <table style="width: 650px">
         <thead>
         <tr>
             <th></th>
@@ -129,13 +158,13 @@
             </td>
             <td></td>
         </tr>
-        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 600px!important;">
+        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;">
             <td><label style="font-size: 16px;color: gray;width: 40%"><span style="color: gray;">。</span>Mua giá
                 rẻ</label></td>
             <td><input id="input-buy-more" class="w3-input" style=" height: 25px " type="number"></td>
             <td><label style="font-size: 12px;color: red" id="error-buy"></label></td>
         </tr>
-        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 600px!important;">
+        <tr style="    margin-top: 20px;margin-bottom: 20px;width: 650px!important;">
             <td><label style="font-size: 16px;color: gray;width: 40%"><span style="color: gray;">。</span>Bán giá
                 cao</label></td>
             <td><input id="input-sell-more" class="w3-input" style=" height: 25px " type="number"></td>
@@ -163,7 +192,9 @@
 </body>
 
 <style>
-
+    body {
+        margin-right: 0px;
+    }
 
     .switch {
         position: relative;
@@ -238,11 +269,9 @@
     }
 
     #body-tab1 {
-        height: 400px;
     }
 
     #body-tab2 {
-        height: 400px;
     }
 
     .btn_tab {
